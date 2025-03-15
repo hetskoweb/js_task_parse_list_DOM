@@ -3,10 +3,12 @@
 // write code here
 const employeesList = document.querySelectorAll('.list li');
 
-function sortList(list, salaryKey = 'salary') {
-  return list.sort((a, b) => {
-    const salaryA = parseFloat(a[salaryKey].replace(/[^0-9.-]+/g, ''));
-    const salaryB = parseFloat(b[salaryKey].replace(/[^0-9.-]+/g, ''));
+function sortList(list, salaryKey = 'data-salary') {
+  const arrayList = Array.from(list);
+
+  return arrayList.sort((a, b) => {
+    const salaryA = parseFloat(a.getAttribute(salaryKey).slice(1));
+    const salaryB = parseFloat(b.getAttribute(salaryKey).slice(1));
 
     return salaryB - salaryA;
   });
@@ -16,6 +18,7 @@ function getEmployees(list) {
   return Array.from(list).map((person) => {
     return {
       element: person,
+      name: person.textContent,
       position: person.getAttribute('data-position'),
       salary: person.getAttribute('data-salary'),
       age: person.getAttribute('data-age'),
@@ -23,13 +26,14 @@ function getEmployees(list) {
   });
 }
 
-const employees = getEmployees(employeesList);
-const sortedEmployees = sortList(employees);
+getEmployees(employeesList);
+
+const sortedEmployees = sortList(employeesList);
 
 const listContainer = document.querySelector('.list');
 
 listContainer.innerHTML = '';
 
 sortedEmployees.forEach((employee) => {
-  listContainer.appendChild(employee.element);
+  listContainer.appendChild(employee);
 });
